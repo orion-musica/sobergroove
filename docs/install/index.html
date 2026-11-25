@@ -1,0 +1,523 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-only
+     Sober Groove web installer. Based on Felucca's installer page (by Leo Kuroshita, Hügelton Instruments),
+     by way of X0X, FoMni and Trumpagotchi. tools/make_installer.py inlines web/fm1pkg.js and web/fm1ota.js
+     and the package's metadata into docs/install/index.html. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install Sober Groove on your M-VAVE FM-1</title>
+<link rel="icon" href="../screens/home-street.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&family=Silkscreen&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #070A06; --panel: #10160E; --line: #22301E; --fg: #E9F2DF; --dim: #A8B79C; --lcd: #A9BD8B; --ink: #1E2B16; --lime: #C6FF3D; --amber: #FFB23E; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 Inter, system-ui, sans-serif; }
+  a { color: var(--lime); }
+  .bar { background: var(--lime); color: var(--bg); font-family: Silkscreen, monospace; font-size: 13px; text-align: center; padding: 8px 16px; }
+  main { max-width: 640px; margin: 0 auto; padding: 36px 20px 64px; }
+  .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .logo { font-family: Silkscreen, monospace; font-size: 20px; color: var(--fg); text-decoration: none; }
+  .lang { font: inherit; font-size: 14px; background: none; border: 1px solid var(--line); color: var(--dim); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-size: 40px; line-height: 1.05; margin: 0 0 12px; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-size: 22px; margin: 40px 0 12px; }
+  p { margin: 0 0 14px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; margin: 22px 0; }
+  .lcd { background: var(--lcd); color: var(--ink); border-radius: 8px; padding: 14px 16px; font-family: Silkscreen, monospace; font-size: 14px; min-height: 3.2em; }
+  ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  button { font: inherit; font-weight: 600; font-size: 17px; background: var(--lime); color: var(--bg); border: 0; border-radius: 10px; padding: 14px 26px; cursor: pointer; min-height: 48px; }
+  button.alt { background: none; color: var(--fg); border: 1.5px solid #3A4A33; }
+  button:disabled { opacity: .3; cursor: default; }
+  progress { width: 100%; height: 8px; margin: 16px 0 6px; accent-color: #C6FF3D; }
+  .small { color: var(--dim); font-size: 14px; }
+  .warn { border-left: 0; background: #2A1A05; border: 1px solid #5A3A0C; color: #F5DDB8; border-radius: 12px; padding: 14px 16px; font-size: 15px; }
+  pre { color: var(--dim); font-size: 12px; white-space: pre-wrap; max-height: 180px; overflow: auto; }
+  input[type=file] { font: inherit; font-size: 14px; color: var(--dim); max-width: 100%; }
+  code { font-family: Silkscreen, monospace; font-size: 13px; color: var(--lcd); }
+</style>
+</head>
+<body>
+<div class="bar">CUSTOM FIRMWARE FOR THE M-VAVE FM-1 SYNTHESIZER</div>
+<main>
+  <div class="top">
+    <a class="logo" href="../">SOBER GROOVE</a>
+    <button class="lang" id="lang" type="button"></button>
+  </div>
+  <h1 data-t="title"></h1>
+  <p data-t="intro"></p>
+
+  <div class="warn">
+    <p style="margin: 0 0 8px"><b data-t="alphah"></b></p>
+    <p style="margin: 0" data-t="alpha"></p>
+  </div>
+
+  <div class="card">
+    <ol>
+      <li data-t="s1"></li>
+      <li data-t="s2"></li>
+      <li data-t="s3"></li>
+      <li data-t="s4"></li>
+    </ol>
+    <div class="lcd" id="status" role="status" aria-live="polite"></div>
+    <progress id="bar" max="100" value="0" aria-label="Progress"></progress>
+    <p style="margin-top: 14px"><button id="go" type="button" disabled data-t="install"></button></p>
+    <p class="small"><span data-t="own"></span><br><label for="ownfile" class="small" data-t="ownlabel"></label><br><input type="file" id="ownfile" accept=".fwsc"></p>
+    <pre id="log"></pre>
+  </div>
+
+  <h2 data-t="stockh"></h2>
+  <p class="small" data-t="stockwhy"></p>
+  <ol class="small">
+    <li><span data-t="stock1"></span> <a href="https://yms-file-store.oss-cn-hongkong.aliyuncs.com/software/firmware/FM-1.fwsc">FM-1.fwsc</a></li>
+    <li><label for="stockfile" data-t="stock2"></label><br><input type="file" id="stockfile" accept=".fwsc"></li>
+    <li data-t="stock3"></li>
+  </ol>
+  <p><button id="stockgo" class="alt" type="button" disabled data-t="stockinstall"></button></p>
+  <p class="small" data-t="m-upgrade"></p>
+
+  <h2 data-t="helph"></h2>
+  <p class="small" data-t="help"></p>
+  <p class="small"><a href="https://github.com/orion-musica/sobergroove/blob/main/docs/USER-GUIDE.md" data-t="guide"></a> · <a href="https://github.com/orion-musica/sobergroove/blob/main/docs/HARDWARE-TESTING.md" data-t="checklist"></a> · <a href="https://github.com/orion-musica/sobergroove/issues" data-t="issues"></a></p>
+  <p class="small" style="margin-top: 32px">Sober Groove: GPL-3.0-only, no warranty. Source: <a href="https://github.com/orion-musica/sobergroove">github.com/orion-musica/sobergroove</a>. The installer is Felucca's (Leo Kuroshita, Hügelton Instruments), by way of X0X, FoMni and Trumpagotchi. M-VAVE and FM-1 are trademarks of their owners; this is independent firmware.</p>
+</main>
+<script type="module">
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments
+//
+// FM-1 .fwsc packages in the browser: the package identity and the image the
+// device reads during an update.
+
+const BLOCKS = 20, BLK = 0x30, KEEP = 0x2F;
+
+// the package identity ("FM-1_904"): one marker byte after each of the first 20 blocks
+function productOf(fwsc) {
+  if (fwsc.length < BLOCKS * BLK) throw new Error("not an FM-1 package (too short)");
+  let s = "";
+  for (let i = 0; i < BLOCKS; i++) {
+    const m = fwsc[i * BLK + KEEP];
+    if (m !== 0x7D) s += String.fromCharCode((m - i - 1) & 0xFF);
+  }
+  return s;
+}
+
+// the image the device addresses during an update: the .fwsc without the 20 marker bytes
+function logicalImage(fwsc) {
+  const out = new Uint8Array(fwsc.length - BLOCKS);
+  for (let i = 0; i < BLOCKS; i++) out.set(fwsc.subarray(i * BLK, i * BLK + KEEP), i * KEEP);
+  out.set(fwsc.subarray(BLOCKS * BLK), BLOCKS * KEEP);
+  return out;
+}
+
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments
+//
+// The FM-1 USB-MIDI update protocol (M-UPGRADE compatible) over WebMIDI.
+// Step 1: the running firmware reads parts of the package and stages the update
+// loader. Step 2: the loader reads the whole image and writes it. In both steps
+// the device sends cmd 0x30 read requests on the logical image and we answer.
+
+const HS_QUERY = [0xF0, 0x00, 0x32, 0x45, 0x00, 0x00, 0x00, 0x40, 0x7F, 0xF7];
+const UPGRADE = [0xF0, 0x22, 0x24, 0x35, 0x7F, 0xF7];
+const MAXDATA = 512;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const IS_OTA = (id) => /^ota-/i.test(id.model);
+
+// errors carry a code the pages translate: notfound, model, stopped, noloader, lost, noreturn,
+// mismatch (detail: the identity the device reports), badreq
+function fail(code, msg, detail = "") { const e = new Error(msg); e.code = code; e.detail = detail; return e; }
+
+function pack7(data) {
+  const out = []; let acc = 0, nb = 0;
+  for (const b of data) {
+    acc |= b << nb; nb += 8;
+    while (nb >= 7) { out.push(acc & 0x7F); acc >>>= 7; nb -= 7; }
+  }
+  if (nb) out.push(acc & 0x7F);
+  return out;
+}
+
+function unpack7(s) {
+  const out = []; let acc = 0, nb = 0;
+  for (const b of s) {
+    acc |= (b & 0x7F) << nb; nb += 7;
+    while (nb >= 8) { out.push(acc & 0xFF); acc >>>= 8; nb -= 8; }
+  }
+  return out;
+}
+
+function response(addr, data, fl = 0) {
+  const len = data.length;
+  const body = [0x00, 0x59, 0x30, (len + 8) & 0xFF, ((len + 8) >> 8) & 0xFF, 0, fl,
+    addr & 0xFF, (addr >>> 8) & 0xFF, (addr >>> 16) & 0xFF, (addr >>> 24) & 0xFF,
+    len & 0xFF, (len >> 8) & 0xFF, 0, ...data];
+  let s = 0;
+  for (let i = 6; i < body.length; i++) s += body[i];
+  body.push(~s & 0xFF);
+  return [0xF0, ...pack7(body), 0xF7];
+}
+
+function parseRequest(pkt) {
+  if (pkt[0] !== 0xF0 || pkt[pkt.length - 1] !== 0xF7) return null;
+  const u = unpack7(pkt.slice(1, -1));
+  if (u.length !== 15 || u[0] !== 0 || u[1] !== 0x59 || u[2] !== 0x30) return null;
+  let s = 0;
+  for (let i = 6; i < 14; i++) s += u[i];
+  if ((~s & 0xFF) !== u[14]) return null;
+  return { fl: u[6], addr: (u[7] | (u[8] << 8) | (u[9] << 16) | (u[10] << 24)) >>> 0, len: u[11] | (u[12] << 8) | (u[13] << 16) };
+}
+
+function parseIdentity(pkt) {
+  const d = unpack7(pkt.slice(1, -1));
+  if (d.length !== 34 || d[0] !== 0 || d[1] !== 0x59 || d[2] !== 0x11) return null;
+  const txt = String.fromCharCode(...d.slice(6, 33)).replace(/\0+$/, "");
+  const m = /^([^_]+)_(\d+)$/.exec(txt);
+  return m ? { text: txt, model: m[1], version: parseInt(m[2], 10) } : null;
+}
+
+// one MIDI in/out pair with a SysEx queue
+class Link {
+  constructor(input, output) {
+    this.input = input; this.output = output; this.q = []; this.waiter = null;
+    input.onmidimessage = (ev) => {
+      if (ev.data[0] !== 0xF0) return;
+      this.q.push(Array.from(ev.data));
+      if (this.waiter) { const w = this.waiter; this.waiter = null; w(); }
+    };
+  }
+  get lost() { return this.input.state === "disconnected" || this.output.state === "disconnected"; }
+  // false when the port is gone (unplugged): WebMIDI throws on a disconnected output
+  send(bytes) {
+    try { this.output.send(bytes); return true; } catch (_) { return false; }
+  }
+  drain() { this.q.length = 0; }
+  async read(ms) {
+    if (!this.q.length) {
+      let tm;
+      await Promise.race([new Promise((r) => { this.waiter = r; }), new Promise((r) => { tm = setTimeout(r, ms); })]);
+      clearTimeout(tm);
+      this.waiter = null;
+    }
+    return this.q.shift() || null;
+  }
+  close() { this.input.onmidimessage = null; }
+}
+
+async function handshake(link, tries = 3) {
+  link.drain();
+  for (let t = 0; t < tries; t++) {
+    if (!link.send(HS_QUERY)) return null;
+    const end = Date.now() + 1000;
+    while (Date.now() < end) {
+      const p = await link.read(end - Date.now());
+      if (!p) break;
+      const id = parseIdentity(p);
+      if (id) return id;
+    }
+  }
+  return null;
+}
+
+class Updater {
+  constructor(access, log) {
+    this.access = access;
+    this.log = log || (() => {});
+  }
+
+  // every in/out pair with the same port name that answers the handshake
+  async find(filter) {
+    const outs = [...this.access.outputs.values()];
+    for (const input of this.access.inputs.values()) {
+      if (input.state === "disconnected") continue;
+      if (!/fm-1|felucca|ota|composite|sinco|usb-midi/i.test(input.name || "")) continue;   // never probe other gear
+      const output = outs.find((o) => o.name === input.name) || (outs.length === 1 ? outs[0] : null);
+      if (!output) continue;
+      try { await input.open(); await output.open(); } catch (_) { continue; }
+      const link = new Link(input, output);
+      const id = await handshake(link, 2);
+      if (id && (!filter || filter(id))) return { link, id, name: input.name };
+      link.close();
+    }
+    return null;
+  }
+
+  async waitFor(filter, ms) {
+    const end = Date.now() + ms;
+    while (Date.now() < end) {
+      const dev = await this.find(filter);
+      if (dev) return dev;
+      await sleep(1000);
+    }
+    return null;
+  }
+
+  // serve read requests until the device asks for one of the finish addresses; stops early
+  // when the port disappears (lost: true) instead of waiting out idleMs
+  async serve(link, image, finishAddr, idleMs, onProgress) {
+    let served = 0, last = Date.now();
+    for (;;) {
+      const pkt = await link.read(1000);
+      if (!pkt) {
+        if (link.lost) return { served, finished: false, lost: true };
+        if (Date.now() - last > idleMs) return { served, finished: false };
+        continue;
+      }
+      const r = parseRequest(pkt);
+      if (!r) continue;
+      last = Date.now();
+      if (r.addr === 0xE0000000 || r.addr === 0xF0000000) {
+        link.send(response(r.addr, [...new TextEncoder().encode("success"), 0]));
+        if (r.addr === finishAddr) return { served, finished: true };
+        continue;
+      }
+      if (r.len > MAXDATA || r.addr + r.len > image.length) throw fail("badreq", `bad request ${r.addr.toString(16)}+${r.len}`);
+      await sleep(10);
+      if (!link.send(response(r.addr, Array.from(image.subarray(r.addr, r.addr + r.len)), r.fl))) {
+        return { served, finished: false, lost: true };
+      }
+      served++;
+      if (onProgress) onProgress(served, r.addr);
+    }
+  }
+
+  // full install: running firmware -> loader -> new firmware
+  async install(image, product, onStep) {
+    const step = onStep || (() => {});
+    const dev = await this.find((id) => !IS_OTA(id));
+    if (!dev) throw fail("notfound", "FM-1 not found (USB cable, and no other app using it?)");
+    const [model] = product.split("_");
+    if (dev.id.model !== model) { dev.link.close(); throw fail("model", `the device is ${dev.id.text}, the package is for ${product}`); }
+    step("start", dev.id.text);
+    dev.link.send(UPGRADE);
+    await sleep(2000);
+    const s1 = await this.serve(dev.link, image, 0xE0000000, 8000, (n) => step("verify", n));
+    dev.link.close();
+    if (!s1.finished) throw fail(s1.lost ? "lost" : "stopped", `the device ${s1.lost ? "was disconnected" : "stopped"} after ${s1.served} requests: nothing was written`);
+    step("loader");
+    await sleep(3000);
+    const ota = await this.waitFor(IS_OTA, 30000);
+    if (!ota) throw fail("noloader", "the update loader did not appear. Replug the USB cable and press Install again: the device stays in update mode until it is finished.");
+    const s2 = await this.write(ota, image, step);
+    if (!s2.finished) throw fail(s2.lost ? "lost" : "stopped", `the loader ${s2.lost ? "was disconnected" : "stopped"} after ${s2.served} requests. Replug and press Install again to resume.`);
+    step("reboot");
+    await sleep(3000);
+    const back = await this.waitFor((id) => !IS_OTA(id), 40000);
+    if (!back) throw fail("noreturn", "the device did not come back: power-cycle it");
+    back.link.close();
+    if (back.id.text !== product) throw fail("mismatch", `installed, but the device reports ${back.id.text}`, back.id.text);
+    step("done", back.id.text);
+    return back.id.text;
+  }
+
+  // step 2 with the loader found by find()/waitFor()
+  async write(ota, image, step) {
+    ota.link.send(UPGRADE);
+    await sleep(2000);
+    const s2 = await this.serve(ota.link, image, 0xF0000000, 180000, (n) => step("write", n));
+    ota.link.close();
+    return s2;
+  }
+
+  // resume: the device is already in update mode (loader) -> true when the write finished
+  async resume(image, onStep) {
+    const ota = await this.find(IS_OTA);
+    if (!ota) return false;
+    return (await this.write(ota, image, onStep || (() => {}))).finished;
+  }
+}
+
+const $ = (id) => document.getElementById(id);
+const TEXT = {
+  en: {
+    other: "Polski",
+    title: "Install Sober Groove on your FM-1",
+    intro: "Right here in the browser, over a USB cable. No apps, no command line. Works in Chrome or Edge on a computer.",
+    alphah: "Alpha: not yet tested on a device.",
+    alpha: "This build compiles and passes the simulator tests, but nobody has run it on an FM-1 yet. You are among the first. Note your current firmware so you can go back, and use it at your own risk: the authors accept no responsibility for any damage.",
+    s1: "Use Chrome or Edge on a computer (not a phone).",
+    s2: "Connect the FM-1 directly to the computer with a USB data cable. Close other music apps that use MIDI.",
+    s3: "Press Install and allow MIDI access when the browser asks.",
+    s4: "Do not unplug the cable until it says Done. The FM-1 restarts with Sober Groove.",
+    install: "Install Sober Groove",
+    own: "No package below, or built your own?",
+    ownlabel: "Choose a sobergroove .fwsc file:",
+    stockh: "Back to the original firmware",
+    stockwhy: "This writes M-VAVE's own FM-1 V15 back over the same cable. Sober Groove's progress is lost.",
+    stock1: "Download M-VAVE's FM-1 V15:",
+    stock2: "Choose the file you downloaded:",
+    stock3: "Connect the FM-1 and press the button below.",
+    stockinstall: "Install the original firmware",
+    stockok: "That is M-VAVE's FM-1 V15. Press the button to install it.",
+    stockbad: "That is not M-VAVE's FM-1 V15 file. Choose the file from the link above.",
+    stockdone: "Done. The FM-1 has restarted with its original firmware.",
+    "m-upgrade": "M-VAVE's own updater, M-UPGRADE (m-vave.com → Downloads → PC Software), also puts the original firmware back.",
+    helph: "If something goes wrong",
+    help: "An interrupted update finishes when you replug the cable and press Install again: the FM-1 waits in update mode. If it will not start at all, the repository's rescue tool (tools/fm1_rescue.py) can put the original firmware back from a computer.",
+    guide: "User guide", checklist: "Hardware test checklist", issues: "Report a problem",
+    ready: "Ready: Sober Groove ", nopkg: "No package published here yet. Choose a .fwsc file below, or download it from the GitHub release.",
+    ownok: "Ready to install this file: ", ownbad: "That is not a Sober Groove package (identity ",
+    nomidi: "This browser cannot do it. Open the page in Chrome or Edge on a computer.", loadfail: "Could not load: ",
+    start: "Starting", verify: "Checking", loader: "Switching to update mode", write: "Writing",
+    reboot: "Restarting", done: "Done. Sober Groove is on your FM-1. Hold HOME tomorrow morning: not today.",
+    stopped: "Stopped. Replug the USB cable and press Install again.", error: "Error: ",
+    denied: "MIDI (SysEx) access was not allowed. Allow MIDI in the site settings (address bar) and press Install again.",
+    notfound: "FM-1 not found. Check the USB cable (a data cable), close other apps that use MIDI, and press Install again.",
+    model: "The connected device is not an FM-1.",
+    lost: "The USB connection was lost. Replug it and press Install again.",
+    noloader: "The FM-1 in update mode was not found. Replug the USB cable and press Install again (it stays in update mode until it is finished).",
+    noreturn: "The FM-1 did not come back. Switch it off and on.",
+    mismatch: "Written, but the FM-1 reports another identity: ",
+    badpkg: "The package is damaged. Reload the page.",
+    leave: "Writing. Do not close the page.",
+  },
+  pl: {
+    other: "English",
+    title: "Zainstaluj Sober Groove na swoim FM-1",
+    intro: "Prosto w przeglądarce, przez kabel USB. Bez aplikacji i bez wiersza poleceń. Działa w Chrome lub Edge na komputerze.",
+    alphah: "Wersja alpha: jeszcze nie testowana na urządzeniu.",
+    alpha: "Ta wersja kompiluje się i przechodzi testy w symulatorze, ale nikt jeszcze nie uruchomił jej na FM-1. Jesteś jedną z pierwszych osób. Zapisz, jaki firmware masz teraz, żeby móc wrócić, i używaj na własne ryzyko: autorzy nie odpowiadają za ewentualne szkody.",
+    s1: "Użyj Chrome lub Edge na komputerze (nie na telefonie).",
+    s2: "Podłącz FM-1 bezpośrednio do komputera kablem USB do transmisji danych. Zamknij inne programy muzyczne, które używają MIDI.",
+    s3: "Kliknij „Zainstaluj” i zezwól na dostęp do MIDI, gdy przeglądarka zapyta.",
+    s4: "Nie odłączaj kabla, dopóki nie pojawi się „Gotowe”. FM-1 uruchomi się z Sober Groove.",
+    install: "Zainstaluj Sober Groove",
+    own: "Nie ma tu paczki albo zbudowałeś własną?",
+    ownlabel: "Wybierz plik sobergroove .fwsc:",
+    stockh: "Powrót do oryginalnego firmware",
+    stockwhy: "To wgrywa z powrotem oryginalny firmware M-VAVE FM-1 V15 tym samym kablem. Postęp w Sober Groove zostanie utracony.",
+    stock1: "Pobierz FM-1 V15 od M-VAVE:",
+    stock2: "Wybierz pobrany plik:",
+    stock3: "Podłącz FM-1 i kliknij przycisk poniżej.",
+    stockinstall: "Zainstaluj oryginalny firmware",
+    stockok: "To jest FM-1 V15 od M-VAVE. Kliknij przycisk, żeby go zainstalować.",
+    stockbad: "To nie jest plik FM-1 V15 od M-VAVE. Wybierz plik z linku powyżej.",
+    stockdone: "Gotowe. FM-1 uruchomił się z oryginalnym firmware.",
+    "m-upgrade": "Oryginalny firmware przywraca też oficjalny program M-VAVE, M-UPGRADE (m-vave.com → Downloads → PC Software).",
+    helph: "Jeśli coś pójdzie nie tak",
+    help: "Przerwana aktualizacja dokończy się, gdy podłączysz kabel ponownie i znów klikniesz „Zainstaluj”: FM-1 czeka w trybie aktualizacji. Jeśli w ogóle się nie uruchamia, narzędzie ratunkowe z repozytorium (tools/fm1_rescue.py) przywróci oryginalny firmware z komputera.",
+    guide: "Przewodnik użytkownika", checklist: "Lista kontrolna testu", issues: "Zgłoś problem",
+    ready: "Gotowe do instalacji: Sober Groove ", nopkg: "Nie ma tu jeszcze opublikowanej paczki. Wybierz plik .fwsc poniżej albo pobierz go z wydania na GitHubie.",
+    ownok: "Gotowe do instalacji tego pliku: ", ownbad: "To nie jest paczka Sober Groove (identyfikator ",
+    nomidi: "Ta przeglądarka tego nie potrafi. Otwórz stronę w Chrome lub Edge na komputerze.", loadfail: "Nie udało się wczytać: ",
+    start: "Start", verify: "Sprawdzanie", loader: "Przełączanie w tryb aktualizacji", write: "Zapisywanie",
+    reboot: "Ponowne uruchamianie", done: "Gotowe. Sober Groove jest na Twoim FM-1. Jutro rano przytrzymaj HOME: not today.",
+    stopped: "Zatrzymano. Podłącz kabel USB ponownie i kliknij „Zainstaluj”.", error: "Błąd: ",
+    denied: "Nie zezwolono na dostęp do MIDI (SysEx). Zezwól na MIDI w ustawieniach strony (pasek adresu) i kliknij „Zainstaluj” ponownie.",
+    notfound: "Nie znaleziono FM-1. Sprawdź kabel USB (do danych), zamknij inne programy używające MIDI i kliknij „Zainstaluj” ponownie.",
+    model: "Podłączone urządzenie to nie FM-1.",
+    lost: "Połączenie USB zostało przerwane. Podłącz ponownie i kliknij „Zainstaluj”.",
+    noloader: "Nie znaleziono FM-1 w trybie aktualizacji. Podłącz kabel ponownie i kliknij „Zainstaluj” (urządzenie zostaje w tym trybie do końca).",
+    noreturn: "FM-1 nie wrócił. Wyłącz go i włącz ponownie.",
+    mismatch: "Zapisano, ale FM-1 zgłasza inny identyfikator: ",
+    badpkg: "Paczka jest uszkodzona. Odśwież stronę.",
+    leave: "Trwa zapisywanie. Nie zamykaj strony.",
+  },
+};
+let lang = (navigator.language || "").toLowerCase().startsWith("pl") ? "pl" : "en";
+const t = (k) => TEXT[lang][k];
+let lastKey = null, lastArg = "";
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-t]").forEach((e) => { e.textContent = t(e.dataset.t); });
+  $("lang").textContent = t("other");
+  if (lastKey) $("status").textContent = t(lastKey) + lastArg;
+}
+$("lang").addEventListener("click", () => { lang = lang === "pl" ? "en" : "pl"; applyLang(); });
+applyLang();
+const sayK = (k, arg = "") => { lastKey = k; lastArg = arg; $("status").textContent = t(k) + arg; };
+const log = (s) => { $("log").textContent += s + "\n"; };
+let image = null;
+const meta = {"version": "0.1.0-alpha", "product": "FM-1_506370001", "pkg": "sobergroove.fwsc"};
+
+let writing = false;
+window.addEventListener("beforeunload", (e) => { if (writing) { e.preventDefault(); e.returnValue = t("leave"); } });
+
+(async () => {
+  if (!navigator.requestMIDIAccess) { sayK("nomidi"); return; }
+  try {
+    const r = await fetch(meta.pkg, { cache: "no-cache" });
+    if (!r.ok) { sayK("nopkg"); return; }
+    const pkg = new Uint8Array(await r.arrayBuffer());
+    if (productOf(pkg) !== meta.product) { sayK("badpkg"); return; }
+    image = logicalImage(pkg);
+    sayK("ready", meta.version);
+    $("go").disabled = false;
+  } catch (e) { sayK("nopkg"); }
+})();
+
+/* a package the user chose: it must carry Sober Groove's identity */
+$("ownfile").addEventListener("change", async (e) => {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  try {
+    const raw = new Uint8Array(await f.arrayBuffer());
+    const id = productOf(raw);
+    if (id !== meta.product) { sayK("ownbad", id + ")."); return; }
+    image = logicalImage(raw);
+    sayK("ownok", f.name);
+    $("go").disabled = writing || !navigator.requestMIDIAccess;
+  } catch (err) { sayK("error", err && err.message); }
+});
+
+/* the original firmware: M-VAVE's FM-1 V15, chosen by the user (M-VAVE's server allows no
+   cross-site download) and checked against its SHA-256 before anything is written */
+const STOCK_SHA256 = "db1642b2b6fa5c2cccb11ffd13878068bb28601678d3644049f99dc40e7edb8a";
+let stock = null;
+$("stockfile").addEventListener("change", async (e) => {
+  stock = null;
+  $("stockgo").disabled = true;
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  try {
+    const raw = new Uint8Array(await f.arrayBuffer());
+    const hex = [...new Uint8Array(await crypto.subtle.digest("SHA-256", raw))].map((b) => b.toString(16).padStart(2, "0")).join("");
+    if (hex !== STOCK_SHA256) { sayK("stockbad"); return; }
+    stock = { image: logicalImage(raw), product: productOf(raw) };
+    $("stockgo").disabled = writing;
+    sayK("stockok");
+  } catch (err) { sayK("error", err && err.message); }
+});
+
+async function run(img, product, isStock) {
+  let midi;
+  try { midi = await navigator.requestMIDIAccess({ sysex: true }); }
+  catch (e) { sayK("denied"); return; }
+  writing = true;
+  $("go").disabled = $("stockgo").disabled = true;
+  try {
+    const up = new Updater(midi, log);
+    const total = 74 + 1167;
+    const step = (k, a) => {
+      log(`${k} ${a ?? ""}`);
+      if (k === "start") sayK("start");
+      if (k === "verify") { sayK("verify"); $("bar").value = (a / total) * 100; }
+      if (k === "loader") sayK("loader");
+      if (k === "write") { sayK("write"); $("bar").value = ((74 + a) / total) * 100; }
+      if (k === "reboot") sayK("reboot");
+      if (k === "done") { $("bar").value = 100; sayK(isStock ? "stockdone" : "done"); }
+    };
+    const ota = await up.find((id) => /^ota-/i.test(id.model));
+    if (ota) {
+      ota.link.close();
+      sayK((await up.resume(img, step)) ? (isStock ? "stockdone" : "done") : "stopped");
+    } else {
+      await up.install(img, product, step);
+    }
+  } catch (e) {
+    if (isStock && e && e.code === "mismatch") { $("bar").value = 100; sayK("stockdone"); }
+    else if (e && e.code && TEXT[lang][e.code]) sayK(e.code, e.detail || "");
+    else sayK("error", e && e.message);
+    log(String(e && e.stack || e));
+  }
+  writing = false;
+  $("go").disabled = !image;
+  $("stockgo").disabled = !stock;
+}
+
+$("go").addEventListener("click", () => run(image, meta.product, false));
+$("stockgo").addEventListener("click", () => { if (stock) run(stock.image, stock.product, true); });
+</script>
+</body>
+</html>

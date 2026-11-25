@@ -32,6 +32,8 @@ jobs:
       AC79_SDK: ${{ github.workspace }}/tooling/ac79-sdk
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-python@v5
         with:
@@ -80,6 +82,20 @@ jobs:
             build/omni.bin
             build/loader/ota.bin
             build/SHA256SUMS.txt
+
+      - name: Publish the package on the web installer
+        if: github.event_name != 'pull_request'
+        run: |
+          python tools/make_installer.py build/sobergroove-*.fwsc "${{ steps.v.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/install
+          if git diff --cached --quiet; then
+            echo "The installer already has this package."
+          else
+            git commit -m "Web installer: Sober Groove ${{ steps.v.outputs.version }} [skip ci]"
+            git push origin HEAD:main
+          fi
 
       - name: Attach to the release
         if: steps.v.outputs.tag != ''
