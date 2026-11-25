@@ -66,8 +66,21 @@ The device's Help screen lists where to look, without phone numbers (they change
 - **Samaritans** (UK and Ireland), 24/7.
 - **AA**, as one option among others.
 
+## Documentation
+
+| Document | For |
+| --- | --- |
+| [User guide](docs/USER-GUIDE.md) | Every screen, control and feature, troubleshooting and questions |
+| [Install](INSTALL.md) · [Build](BUILDING.md) | Installing and building the firmware |
+| [Hardware test checklist](docs/HARDWARE-TESTING.md) | Testing the alpha on an FM-1 |
+| [Design notes](docs/DESIGN.md) | The rules every feature must pass, the caretaker model, the story |
+| [Architecture](docs/ARCHITECTURE.md) | Code structure, drawing, sound, game state, save format, tests |
+| [Content guide](docs/CONTENT-GUIDE.md) | How the buddy talks; rules for wording and review |
+| [Contributing](CONTRIBUTING.md) | How to help |
+| [Release notes](RELEASE-NOTES.md) | What is in this version and what is planned |
+
 ## Source and credits
 
-Code and original artwork: **GPL-3.0-only**. Sober Groove is built on the FM-1 platform work of [Trumpagotchi](https://github.com/adamcharleswilsonmusic-code/Trumpagotchi), FoMni, [X0X](https://github.com/charlesvestal/fm1-x0x) and [Felucca](https://github.com/hugelton/Felucca). Inherited notices are kept in [LICENSING.md](LICENSING.md) and `LICENSES/`. Developers: [BUILDING.md](BUILDING.md), design notes: [docs/DESIGN.md](docs/DESIGN.md).
+Code and original artwork: **GPL-3.0-only**. Sober Groove is built on the FM-1 platform work of [Trumpagotchi](https://github.com/adamcharleswilsonmusic-code/Trumpagotchi), FoMni, [X0X](https://github.com/charlesvestal/fm1-x0x) and [Felucca](https://github.com/hugelton/Felucca). Inherited notices are kept in [LICENSING.md](LICENSING.md) and `LICENSES/`.
 
 "M-VAVE" and "FM-1" are trademarks of their respective owners. Sober Groove is independent firmware, not affiliated with or endorsed by M-VAVE or any organisation named here.
