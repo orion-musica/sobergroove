@@ -155,7 +155,7 @@ def ufw(flash, ota, product):
         struct.pack_into("<HHHHIII", e, 0, typ, i, crc16(d), 0, off, len(d), (len(d) + 31) & ~31)
         e[0x40:0x40 + len(name)] = name.encode()
         ents.append((e, off, d))
-        off += len(d)
+        off += (len(d) + 31) & ~31     # the stored size: the package covers every entry's padded length
     total = off
     hdr = bytearray(0x40)
     struct.pack_into("<IH", hdr, 4, total, len(files))

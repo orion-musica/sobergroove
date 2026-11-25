@@ -15,7 +15,9 @@ To go back, install the M-VAVE firmware or another community firmware the same w
 
 ## Easiest: install in the browser
 
-Open **https://orion-musica.github.io/sobergroove/install/** in Chrome or Edge on a computer, connect the FM-1 with a USB data cable, press **Install Sober Groove** and allow MIDI access. Do not unplug until it says Done. The same page can put M-VAVE's original firmware back.
+Open **https://orion-musica.github.io/sobergroove/install/** in Chrome or Edge on a computer, connect the FM-1 with a USB data cable, press **Connect FM-1**, allow MIDI and SysEx, tick the backup box and press **Install Sober Groove**. Do not unplug until it says DONE. The page uses the same update engine as 3310 (FM1 Open's browser updater) and has M-VAVE's original V15 built in, so you can always go back.
+
+Coming from 3310 or another FM1 Open firmware: the safest route is two steps on the same page, first **Original M-VAVE V15**, then **Sober Groove**.
 
 The page serves the package built by the latest GitHub Actions run. If it says no package is published yet, download `sobergroove-*.fwsc` from the release and choose it with the file picker on the page.
 

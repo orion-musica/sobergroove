@@ -87,6 +87,7 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           python tools/make_installer.py build/sobergroove-*.fwsc "${{ steps.v.outputs.version }}"
+          node tests/web/installer_test.mjs docs/install/sobergroove.fwsc
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/install
