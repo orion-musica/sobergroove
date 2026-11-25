@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: GPL-3.0-only
  * Boot, audio ISR and main loop adapted from Felucca's main.c / audio.c, Copyright (C) 2026
  * Leo Kuroshita (@kurogedelic), Hugelton Instruments. */
-/* FMO on the FM-1 (from X0X's): boot (WDT first, boot-loop guard, guards), LCD, input (TIMER5
+/* Sober Groove on the FM-1 (FMO's, from X0X's): boot (WDT first, boot-loop guard, guards), LCD, input (TIMER5
  * 10 kHz), audio (ALNK0), USB; then the main loop: UI at ~60 frames/s, input polled in between. */
 extern uint32_t _data_start[], _data_end[], _data_load[], _bss_start[], _bss_end[];
 extern uint32_t _pool_start[], _pool_end[], _rt_start[], _rt_end[], _rt_load[];
@@ -145,7 +145,7 @@ static void fm1_fault(const fm1_crash_t *c)
     uint32_t t0;
     fm1_audio_stop();
     lcd_fill(0, 0, 240, 240, RGB(160, 0, 0));
-    draw_text_box(0, 8, 240, &FONT_S, "FMO CRASH", C_WHITE, 1);
+    draw_text_box(0, 8, 240, &FONT_S, "SOBER GROOVE CRASHED", C_WHITE, 1);
     hexs(b, c->vec);
     draw_text_box(10, 40, 220, &FONT_S, b, C_WHITE, 0);
     hexs(b, c->pc);
@@ -174,15 +174,15 @@ static void enter_uboot(const char *why)
     fm1_enter_uboot();
 }
 
-/* SAFE MODE: FMO crashed (or hung) twice while starting. Nothing that makes sound runs: no audio,
- * no engine, no UI; USB is on, so the web installer (FMO, or the stock firmware) and M-UPGRADE can
- * reach it. PLAY tries FMO again. The chip's own update mode stays the last resort (fm1_cstart). */
+/* SAFE MODE: Sober Groove crashed (or hung) twice while starting. Nothing that makes sound runs: no audio,
+ * no engine, no UI; USB is on, so the web installer (Sober Groove, or the stock firmware) and M-UPGRADE can
+ * reach it. PLAY tries again. The chip's own update mode stays the last resort (fm1_cstart). */
 static void safe_main(void)
 {
     char b[24];
     uint32_t t0, play;
     lcd_fill(0, 0, 240, 240, C_BLACK);
-    draw_text_box(0, 18, 240, &FONT_B, "FMO SAFE MODE", C_HI, 1);
+    draw_text_box(0, 18, 240, &FONT_B, "SAFE MODE", C_HI, 1);
     draw_text_box(0, 52, 240, &FONT_S, "IT CRASHED TWICE", C_WHITE, 1);
     draw_text_box(0, 72, 240, &FONT_S, "WHILE STARTING.", C_WHITE, 1);
     draw_text_box(0, 102, 240, &FONT_S, "NO SOUND. USB IS ON:", C_WHITE, 1);
@@ -210,9 +210,9 @@ static void safe_main(void)
         if (bootguard.pending && fm1_ms - t0 > 10000u)
             bootguard.pending = 0;                  /* safe mode itself is up: not another failed boot */
         if ((fm1_in.buttons & play) && fm1_ms - t0 > 500u) {
-            bootguard.failed = 0;                   /* try FMO again, from scratch */
+            bootguard.failed = 0;                   /* try again, from scratch */
             bootguard.pending = 0;
-            draw_text_box(0, 172, 240, &FONT_S, "STARTING FMO...", C_HI, 1);
+            draw_text_box(0, 172, 240, &FONT_S, "STARTING AGAIN...", C_HI, 1);
             usb_detach();
             fm1_delay_ms(30);
             fm1_reboot();
@@ -228,17 +228,17 @@ static void safe_main(void)
     }
 }
 
-static void splash(void)
+static void splash(void)                            /* the first frame, before the app takes over */
 {
-    lcd_fill(0, 0, 240, 240, RGB(250, 244, 232));
-    cv_begin(240, 64, RGB(250, 244, 232));
+    lcd_fill(0, 0, 240, 240, LCD_BG);
+    cv_begin(240, 64, LCD_BG);
     {
-        int32_t w = text_w(&FONT_L, "FMO");
-        cv_text((240 - w) / 2, 0, &FONT_L, "FMO", RGB(242, 120, 72));
-        w = text_w(&FONT_S, "Fart Machine One");
-        cv_text((240 - w) / 2, 42, &FONT_S, "Fart Machine One", RGB(150, 136, 118));
+        int32_t w = text_w(&FONT_B, "SOBER GROOVE");
+        cv_text((240 - w) / 2, 4, &FONT_B, "SOBER GROOVE", LCD_INK);
+        w = text_w(&FONT_XS, "STARTING...");
+        cv_text((240 - w) / 2, 40, &FONT_XS, "STARTING...", LCD_INK);
     }
-    cv_blit(0, 92);
+    cv_blit(0, 88);
     lcd_sync();
 }
 
