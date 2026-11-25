@@ -1,0 +1,68 @@
+# Sound: silence at rest, each buddy's instrument is audible and never clips.
+wait 3600
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+wait 4000
+peakreset
+wait 1000
+expect peak_db_max -90
+wav low.wav
+key w5 down
+wait 600
+key w5 up
+wait 800
+expect peak_db_min -30
+expect peak_db_max -0.5
+wavstop
+# Kit: drums
+tap GLO
+turn SELECT 4
+tap SEL
+tap SEL
+tap GLO
+tap GLO
+wait 3000
+expect character 1
+peakreset
+wav kit.wav
+tapkey w0
+wait 200
+tapkey w1
+wait 200
+tapkey w2
+wait 200
+tapkey w3
+wait 600
+expect peak_db_min -30
+expect peak_db_max -0.5
+wavstop
+# Vinyl: pluck
+tap GLO
+turn SELECT 4
+tap SEL
+tap SEL
+tap GLO
+tap GLO
+wait 3000
+expect character 2
+peakreset
+wav vinyl.wav
+tapkey w7
+wait 800
+expect peak_db_min -30
+wavstop
+# SOS breathing bass
+peakreset
+tapkey b4
+wait 2000
+expect peak_db_min -40
+expect peak_db_max -0.5

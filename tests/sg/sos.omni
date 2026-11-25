@@ -1,0 +1,66 @@
+# SOS: a whole craving wave with breathing, the HALT check, a tip, help, and an early exit.
+wait 3600
+# skip the intro with defaults (Low)
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+wait 1200
+expect screen 12
+expect character 0
+tapkey b4
+wait 200
+expect sos 1
+expect notes >0
+shot 30-sos-start.png
+wait 6000
+shot 31-sos-out.png
+skip 300000
+wait 100
+expect screen 23
+shot 32-halt.png
+tapkey b2
+wait 100
+expect screen 24
+shot 33-tip-lonely.png
+tap GLO
+wait 100
+expect screen 32
+shot 34-help-in-sos.png
+tap GLO
+wait 100
+expect screen 22
+skip 300000
+wait 100
+shot 35-sos-peak.png
+skip 610000
+wait 200
+expect waves 1
+expect sos 0
+shot 36-wave-passed.png
+tap SEL
+wait 100
+# a second wave, stopped early by holding key 5
+tapkey b4
+wait 3000
+key b4 down
+wait 2100
+key b4 up
+wait 100
+expect screen 25
+shot 37-exit.png
+turn SELECT -1
+tap SEL
+wait 100
+expect sos 0
+expect waves 1
+expect screen 12
+shot 38-after-exit.png
+wait 3000

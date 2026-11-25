@@ -1,0 +1,154 @@
+# Lessons, repertoire, a stage up, a slip and settings.
+wait 3600
+tap SEL
+tap SEL
+turn SELECT 2
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+tap SEL
+wait 1200
+expect character 2
+# three mornings across reboots
+press HOME
+wait 1700
+release HOME
+tap SEL
+tap SEL
+wait 1500
+reboot
+wait 3600
+press HOME
+wait 1700
+release HOME
+tap SEL
+tap SEL
+tap SEL
+wait 1500
+reboot
+wait 3600
+press HOME
+wait 1700
+release HOME
+tap SEL
+tap SEL
+tap SEL
+wait 1500
+expect days 3
+expect stage 1
+# GLO > JAM: teach three riffs
+tap GLO
+wait 100
+shot 40-menu.png
+tap SEL
+wait 100
+expect screen 28
+tapkey w5
+tapkey w7
+shot 41-teach.png
+tapkey w9
+tapkey w10
+wait 900
+expect screen 29
+shot 42-listen.png
+wait 3500
+expect screen 30
+shot 43-result.png
+turn SELECT 1
+tap SEL
+wait 1500
+reboot
+wait 3600
+expect lessons 1
+tap GLO
+tap SEL
+tapkey w0
+tapkey w2
+tapkey w4
+tapkey w3
+wait 5000
+turn SELECT 1
+tap SEL
+wait 1500
+tap GLO
+tap SEL
+tapkey w8
+tapkey w9
+tap SEL
+wait 5000
+turn SELECT 1
+tap SEL
+wait 300
+expect lessons 3
+expect stage 2
+shot 44-levelup.png
+tap SEL
+wait 200
+shot 45-after.png
+tap HOME
+tap HOME
+wait 100
+shot 46-next.png
+tap HOME
+wait 100
+# repertoire
+tap GLO
+turn SELECT 1
+tap SEL
+wait 100
+expect screen 31
+shot 47-repertoire.png
+tap SEL
+wait 1800
+expect notes >10
+tap GLO
+wait 100
+# a slip
+turn SELECT 3
+tap SEL
+wait 100
+expect screen 34
+shot 48-slip-confirm.png
+turn SELECT -1
+tap SEL
+wait 100
+expect slips 1
+expect streak 0
+expect days 3
+expect stage 2
+shot 49-slip-thanks.png
+tap SEL
+wait 100
+shot 50-slip-what.png
+tap SEL
+wait 100
+shot 51-slip-who.png
+tap SEL
+wait 100
+shot 52-slip-done.png
+tap SEL
+wait 100
+expect screen 12
+shot 53-main-stage2.png
+# settings: thoughts off
+tap GLO
+turn SELECT 4
+tap SEL
+turn SELECT 1
+tap SEL
+wait 100
+expect thoughts_on 0
+shot 54-settings.png
+tap GLO
+tap GLO
+wait 1500
+reboot
+wait 3600
+expect thoughts_on 0
+expect slips 1
+expect riffs 3
